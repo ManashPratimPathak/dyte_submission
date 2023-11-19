@@ -8,6 +8,7 @@ exports.postLog = async (req, res) => {
         timestamp: req.body.timestamp,
         traceId: req.body.traceId,
         spanId: req.body.spanId,
+        metadata: req.body.metadata
     })
 
     try {

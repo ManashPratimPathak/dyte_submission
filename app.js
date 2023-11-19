@@ -1,22 +1,27 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+require('dotenv').config();
 const cors = require('cors');
-const mongoConnect = require('./utils/database').mongoConnect;
-const app = express();
+const express = require('express');
+const mongoose = require('mongoose');
+const mongoString = process.env.DATABASE_URL;
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+mongoose.connect(mongoString);
+const database = mongoose.connection;
+
+database.on('error', (error) => {
+    console.log(error)
+})
+
+database.once('connected', () => {
+    console.log('Database Connected');
+})
+const app = express();
+app.use(cors())
 app.use(express.json());
 
 const routes = require('./routes/routes');
+
 app.use('/api', routes)
 
-// app.use('/', (req,res,next)=>{
-//     res.send("Hello World");
-// });
-
-mongoConnect(()=> {
-  app.listen(8000, (req,res, next)=>{
-    console.log("Manash server is running at port 3000");
-  });  
+app.listen(3000, () => {
+    console.log(`Server Started at ${3000}`)
 })
